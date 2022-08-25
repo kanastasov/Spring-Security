@@ -1,5 +1,6 @@
 package com.kirilanastasoff.springsecurity.SpringSecurity.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,12 +9,23 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @SuppressWarnings("deprecation")
 @Configurable
 @EnableWebSecurity
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
+
+	private  PasswordEncoder passwordEncoder;
+	
+
+	
+	@Autowired
+	public ApplicationSecurityConfig(PasswordEncoder passwordEncoder) {
+		super();
+		this.passwordEncoder = passwordEncoder;
+	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -26,11 +38,19 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected UserDetailsService userDetailsService() {
 		UserDetails ivanov = 
 				User.builder()
-				.username("ivanovivan")
-				.password("password")
-				.roles("student")
+				.username("ivan")
+				.password(passwordEncoder.encode("123"))
+				.roles(ApplicationUserRole.STUDENT.name())
 				.build();
 
-		return new InMemoryUserDetailsManager(ivanov);
+		
+		UserDetails petar = User.builder()
+		.username("petar")
+		.password(passwordEncoder.encode("456"))
+		.roles(ApplicationUserRole.ADMIN.name())
+		.build();
+		
+		
+		return new InMemoryUserDetailsManager(ivanov,petar);
 	}
 }
