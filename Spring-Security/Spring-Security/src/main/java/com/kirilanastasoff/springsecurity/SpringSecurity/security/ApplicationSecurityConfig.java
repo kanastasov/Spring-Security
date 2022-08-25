@@ -3,6 +3,7 @@ package com.kirilanastasoff.springsecurity.SpringSecurity.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -34,6 +35,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 		.authorizeRequests()
 		.antMatchers("/", "index", "/css/*", "/js/*").permitAll()
 		.antMatchers("/api/**").hasRole(ApplicationUserRole.STUDENT.name())
+		.antMatchers(HttpMethod.DELETE, "management/api/**").hasAnyAuthority(ApplicationUserPermission.COURSE_WRITE.name())
+		.antMatchers(HttpMethod.POST, "management/api/**").hasAnyAuthority(ApplicationUserPermission.COURSE_WRITE.name())
+		.antMatchers(HttpMethod.PUT, "management/api/**").hasAnyAuthority(ApplicationUserPermission.COURSE_WRITE.name())
+		.antMatchers(HttpMethod.GET, "management/api/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.ADMINTRAINEE.name())
 		.anyRequest()
 		.authenticated()
 				.and()
