@@ -2,13 +2,14 @@ package com.kirilanastasoff.springsecurity.SpringSecurity.auth;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class ApplicationUser implements UserDetails {
 
-	private List<? extends GrantedAuthority> grantedAuthorities;
+	private Set<? extends GrantedAuthority> grantedAuthorities;
 
 	private String password;
 	private String username;
@@ -17,7 +18,7 @@ public class ApplicationUser implements UserDetails {
 	private boolean isCredentialsNonExpired;
 	private boolean isEnabled;
 
-	public ApplicationUser(List<? extends GrantedAuthority> grantedAuthorities, String password, String username,
+	public ApplicationUser(Set<? extends GrantedAuthority> grantedAuthorities, String password, String username,
 			boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired,
 			boolean isEnabled) {
 		super();
