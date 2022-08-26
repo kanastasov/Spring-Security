@@ -1,5 +1,7 @@
 package com.kirilanastasoff.springsecurity.SpringSecurity.security;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
@@ -49,7 +51,15 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginPage("/login").permitAll()
 				.defaultSuccessUrl("/courses", true)
 				.and()
-				.rememberMe();
+				.rememberMe()
+				.tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21)).key("somethingsecured")
+				.and()
+				.logout()
+					.logoutUrl("/logout")
+					.clearAuthentication(true)
+					.invalidateHttpSession(true)
+					.deleteCookies("JSESSIONID", "XSRF-TOKEN")
+					.logoutSuccessUrl("/login");
 //		default to 2 weeks
 	}
 
