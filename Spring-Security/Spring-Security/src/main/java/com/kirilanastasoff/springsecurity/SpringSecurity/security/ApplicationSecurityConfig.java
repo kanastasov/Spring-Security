@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,6 +20,8 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
 
+import com.kirilanastasoff.springsecurity.SpringSecurity.auth.ApplicationUserService;
+
 @SuppressWarnings("deprecation")
 @Configurable
 @EnableWebSecurity
@@ -26,12 +30,14 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private  PasswordEncoder passwordEncoder;
 	
+	private ApplicationUserService applciationUserService;
 
 	
 	@Autowired
-	public ApplicationSecurityConfig(PasswordEncoder passwordEncoder) {
+	public ApplicationSecurityConfig(PasswordEncoder passwordEncoder,ApplicationUserService applciationUserService) {
 		super();
 		this.passwordEncoder = passwordEncoder;
+		this.applciationUserService =applciationUserService;
 	}
 
 	@Override
@@ -97,5 +103,19 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		
 		return new InMemoryUserDetailsManager(ivanov,petar,gosho);
+	}
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+			auth.authenticationProvider(daoAth());	}
+	
+	
+	@Bean
+	public DaoAuthenticationProvider daoAth () {
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+		provider.setPasswordEncoder(passwordEncoder);
+		provider.setUserDetailsService(applciationUserService);
+		return provider;
+		
 	}
 }
