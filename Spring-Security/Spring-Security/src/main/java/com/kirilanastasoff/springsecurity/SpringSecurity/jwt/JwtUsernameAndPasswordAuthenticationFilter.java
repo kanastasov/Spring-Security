@@ -26,6 +26,10 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 
 	private AuthenticationManager authenticationManager;
 
+	public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager2) {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {

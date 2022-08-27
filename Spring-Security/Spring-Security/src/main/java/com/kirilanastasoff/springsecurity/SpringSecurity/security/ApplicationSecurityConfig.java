@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,6 +22,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
 
 import com.kirilanastasoff.springsecurity.SpringSecurity.auth.ApplicationUserService;
+import com.kirilanastasoff.springsecurity.SpringSecurity.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 
 @SuppressWarnings("deprecation")
 @Configurable
@@ -46,31 +48,34 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 //		.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 //		.and()
 		.csrf().disable()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and()
+		.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager()))
 		.authorizeRequests()
 		.antMatchers("/", "index", "/css/*", "/js/*").permitAll()
 		.antMatchers("/api/**").hasRole(ApplicationUserRole.STUDENT.name())
 		.anyRequest()
-		.authenticated()
-				.and()
+		.authenticated();
+//				.and()
 //				.httpBasic();
-				.formLogin()
-					.loginPage("/login")
-					.permitAll()
-					.defaultSuccessUrl("/courses", true)
-					.passwordParameter("password")
-					.usernameParameter("username")
-				.and()
-				.rememberMe()
-					.tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
-					.key("somethingsecured")
-					.rememberMeParameter("remember-me")
-				.and()
-				.logout()
-					.logoutUrl("/logout")
-					.clearAuthentication(true)
-					.invalidateHttpSession(true)
-					.deleteCookies("JSESSIONID", "XSRF-TOKEN")
-					.logoutSuccessUrl("/login");
+//				.formLogin()
+//					.loginPage("/login")
+//					.permitAll()
+//					.defaultSuccessUrl("/courses", true)
+//					.passwordParameter("password")
+//					.usernameParameter("username")
+//				.and()
+//				.rememberMe()
+//					.tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
+//					.key("somethingsecured")
+//					.rememberMeParameter("remember-me")
+//				.and()
+//				.logout()
+//					.logoutUrl("/logout")
+//					.clearAuthentication(true)
+//					.invalidateHttpSession(true)
+//					.deleteCookies("JSESSIONID", "XSRF-TOKEN")
+//					.logoutSuccessUrl("/login");
 //		default to 2 weeks
 	}
 
