@@ -27,9 +27,12 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	private JwtConfig jwtConfig;
+	private JwtSecretKey secretKey;
 
 	@Autowired
-	public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
+	public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig,
+			JwtSecretKey secretKey) {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -58,24 +61,19 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 		}
 
 	}
-	
+
 	@Override
-	protected void successfulAuthentication(HttpServletRequest request,
-			HttpServletResponse response,
-			FilterChain chain,
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException {
-		String token = Jwts.builder()
-		.setSubject(authResult.getName())
-		.claim("authorities", authResult.getAuthorities())
-		.setIssuedAt(new Date())
-		.setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
-		.signWith(Keys.hmacShaKeyFor("securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecure".getBytes()))
-		.compact();
-		
+		String token = Jwts.builder().setSubject(authResult.getName()).claim("authorities", authResult.getAuthorities())
+				.setIssuedAt(new Date()).setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
+				.signWith(Keys.hmacShaKeyFor(
+						"securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecure"
+								.getBytes()))
+				.compact();
+
 		response.addHeader("Authorization", "Bearer " + token);
-		
-		
+
 	}
-	
-	
+
 }
