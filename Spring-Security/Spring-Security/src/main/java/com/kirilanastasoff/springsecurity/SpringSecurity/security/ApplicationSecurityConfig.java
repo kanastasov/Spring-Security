@@ -64,7 +64,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 //					.defaultSuccessUrl("/courses", true)
 //					.passwordParameter("password")
 //					.usernameParameter("username")
-//				.and()
+//				.and()   
 //				.rememberMe()
 //					.tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
 //					.key("somethingsecured")
