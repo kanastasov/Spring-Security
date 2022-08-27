@@ -22,6 +22,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
 
 import com.kirilanastasoff.springsecurity.SpringSecurity.auth.ApplicationUserService;
+import com.kirilanastasoff.springsecurity.SpringSecurity.jwt.JwtTokenVerifier;
 import com.kirilanastasoff.springsecurity.SpringSecurity.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 
 @SuppressWarnings("deprecation")
@@ -51,6 +52,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
 		.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager()))
+		.addFilterAfter(
+				new JwtTokenVerifier(), JwtUsernameAndPasswordAuthenticationFilter.class)		
 		.authorizeRequests()
 		.antMatchers("/", "index", "/css/*", "/js/*").permitAll()
 		.antMatchers("/api/**").hasRole(ApplicationUserRole.STUDENT.name())
