@@ -8,6 +8,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,9 +25,11 @@ import io.jsonwebtoken.security.Keys;
 
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager2) {
+	@Autowired
+	public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -41,7 +44,8 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 			Authentication authentication = new UsernamePasswordAuthenticationToken(authReq.getUsername(),
 					authReq.getPassword());
 
-			return authenticationManager.authenticate(authentication);
+			Authentication authenticate = authenticationManager.authenticate(authentication);
+			return authenticate;
 		} catch (StreamReadException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
