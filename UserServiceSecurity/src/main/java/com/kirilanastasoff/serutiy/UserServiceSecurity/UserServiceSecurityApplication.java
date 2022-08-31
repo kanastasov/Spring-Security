@@ -32,10 +32,10 @@ public class UserServiceSecurityApplication {
 			userService.saveRole(new Role(null, "ROLE_ADMIN"));
 			userService.saveRole(new Role(null, "ROLE_SUPER_ADMIN"));
 			
-			userService.saveUser(new User(11l, "ivan petrov", "vanka", "123",new ArrayList()));
-			userService.saveUser(new User(12l, "milan milan", "milan", "123",new ArrayList()));
-			userService.saveUser(new User(13l, "petkan petkan", "petkan", "123",new ArrayList()));
-			userService.saveUser(new User(14l, "trifon trifon", "trifon", "123",new ArrayList()));
+			userService.saveUser(new User(null, "ivan petrov", "vanka", "123",new ArrayList()));
+			userService.saveUser(new User(null, "milan milan", "milan", "123",new ArrayList()));
+			userService.saveUser(new User(null, "petkan petkan", "petkan", "123",new ArrayList()));
+			userService.saveUser(new User(null, "trifon trifon", "trifon", "123",new ArrayList()));
 			
 			userService.addRoleToUser("vanka", "ROLE_USER");
 			userService.addRoleToUser("vanka", "ROLE_MANAGER");
