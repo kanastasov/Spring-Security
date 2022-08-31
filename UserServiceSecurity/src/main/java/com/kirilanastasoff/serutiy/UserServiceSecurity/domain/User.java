@@ -33,8 +33,8 @@ import lombok.NoArgsConstructor;
 public class User {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 	
 	@Column(name = "name")
 	private String name;
@@ -60,8 +60,23 @@ public class User {
 	
 	
 	
+	
+	
 	public Long getId() {
 		return id;
+	}
+
+	public User() {
+		super();
+	}
+
+	public User(long id, String name, String username, String password, Collection<Role> roles) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.username = username;
+		this.password = password;
+		this.roles = roles;
 	}
 
 	public void setId(Long id) {

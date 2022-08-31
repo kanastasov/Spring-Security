@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Role {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
 	@Column(name = "name")
@@ -42,6 +42,18 @@ public class Role {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public Role(Long id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+	public Role() {
+		super();
+	}
+	
+	
+	
+	
 
 //	@ManyToMany(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "id")
