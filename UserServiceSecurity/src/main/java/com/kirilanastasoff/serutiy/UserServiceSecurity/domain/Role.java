@@ -1,9 +1,15 @@
 package com.kirilanastasoff.serutiy.UserServiceSecurity.domain;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,6 +37,9 @@ public class Role {
 		this.name = name;
 	}
 
+	@ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+	private Collection<User> users = new ArrayList<>();
 	
 	
 }
