@@ -1,11 +1,17 @@
 package com.kirilanastasoff.serutiy.UserServiceSecurity.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.apache.logging.slf4j.SLF4JLogger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.kirilanastasoff.serutiy.UserServiceSecurity.domain.Role;
@@ -19,15 +25,17 @@ import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
-@Service @RequiredArgsConstructor @Transactional @Slf4j
-public class UserServiceImpl implements UserService{
+@Service
+@RequiredArgsConstructor
+@Transactional
+@Slf4j
+public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private RoleRepository roleRepository;
-	
-	
+
 	@Override
 	public User saveUser(User user) {
 		System.out.println("Saving new user to the database" + " " + user.getName());
@@ -59,9 +67,26 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public List<User> getUsers() {
-		System.out.println("Fetching all userers" );
+		System.out.println("Fetching all userers");
 
 		return userRepository.findAll();
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = userRepository.findByUsername(username);
+		if (user == null) {
+			throw new UsernameNotFoundException("User not found in the database");
+		}
+
+		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		user.getRoles().forEach(role -> {
+			authorities.add(new SimpleGrantedAuthority(role.getName()));
+		}
+		);
+
+		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+				authorities);
 	}
 
 }
