@@ -2,6 +2,8 @@ package com.kirilanastasoff.serutiy.UserServiceSecurity.filter;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
@@ -22,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,7 +44,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
 		String username = request.getParameter("username");
-		String password = request.getParameter("passwprd");
+		String password = request.getParameter("password");
 		System.out.println(username + " and " + password + "********");
 		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
 		return authenticationManager.authenticate(authToken);
@@ -65,10 +68,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 				.withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
 				.withIssuer(request.getRequestURI().toString())
 				.sign(algorithm);
-		response.setHeader("access_token", access_token);
-		response.setHeader("refresh_token", refresh_token);
+//		response.setHeader("access_token", access_token);
+//		response.setHeader("refresh_token", refresh_token);
 
+		Map<String,String> tokens = new HashMap<>();
+		tokens.put("access_token", access_token);
+		tokens.put("refresh_token", refresh_token);
+		response.setContentType("application/json");
 		
-		super.successfulAuthentication(request, response, chain, authResult);
+		new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+
+//		super.successfulAuthentication(request, response, chain, authResult);
 	}
 }

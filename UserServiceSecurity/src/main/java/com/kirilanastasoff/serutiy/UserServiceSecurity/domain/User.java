@@ -70,7 +70,7 @@ public class User {
 		super();
 	}
 
-	public User(long id, String name, String username, String password, Collection<Role> roles) {
+	public User(Long id, String name, String username, String password, Collection<Role> roles) {
 		super();
 		this.id = id;
 		this.name = name;
